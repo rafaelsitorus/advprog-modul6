@@ -1,1 +1,6 @@
 # advprog-modul6
+
+Commit 1 Reflection notes
+    Pada commit 1 saya belajar mengenai bagaimana bahasa Rust menjembatani protokol kontrol transmisi
+    dari suatu stream data, dimana pada tiap stream/koneksi jaringan yang terhubung akan dieksekusi oleh
+    iterator. Tiap iterasi akan mentrigger unwrap() untuk memvalidasi keabsahan stream dan jika terjadi error, unwrap() akan segera menghentikan program yang berjalan. Diasumsikan stream koneksi berjalan dengan lancar, compiler kemudian akan mem-pass stream kedalam method penanganan koneksi. Didalam method terkait yang menerima input koneksi mutable (memungkinkan I/0 pada stream terkait), dilakukan operasi buf_reader sebagai pustaka stream reading secara efisien, setelah itu kode akan menciptakan suatu request http dengan tipe data vector sebagai container stream, dimana buf_reader akan mentrigger iterator lines() untuk mengiterasi tiap input stream, kemudian mengambil nilai string dari result pada stream input, dan kemudian menghentikan iterasi ketika kode membaca input baris kosong, setelahnya compiler akan mengumpulkan semua header HTTP ke dalam Vec<_>. Kemudian mencetak permintaan HTTP menuju server ke terminal.
