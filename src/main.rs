@@ -2,6 +2,8 @@ use std::{
     fs,
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
+    thread,
+    time::Duration,
 };
 
 fn main() {
@@ -19,7 +21,6 @@ fn main() {
 fn handle_connection(mut stream: TcpStream) {
     let buf_reader = BufReader::new(&mut stream);
     
-    // Coba baca request, jika gagal, langsung return
     let request_line = match buf_reader.lines().next() {
         Some(Ok(line)) => line,
         Some(Err(e)) => {
@@ -32,10 +33,13 @@ fn handle_connection(mut stream: TcpStream) {
         }
     };
 
-    let (status_line, filename) = if request_line.starts_with("GET / ") || request_line.starts_with("GET / HTTP") {
-        ("HTTP/1.1 200 OK", "static/hello.html") // Gantilah dengan home.html
-    } else {
-        ("HTTP/1.1 404 NOT FOUND", "static/error.html")
+    let (status_line, filename) = match &request_line[..] {
+        "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", "static/hello.html"),
+        "GET /sleep HTTP/1.1" => {
+            thread::sleep(Duration::from_secs(10)); // Simulate a slow request
+            ("HTTP/1.1 200 OK", "static/hello.html")
+        }
+        _ => ("HTTP/1.1 404 NOT FOUND", "static/error.html"),
     };
 
     let contents = fs::read_to_string(filename).unwrap_or_else(|_| {
