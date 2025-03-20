@@ -10,3 +10,5 @@ Commit 2 Reflection notes
 
 ![Commit 2 screen capture](/assets/images/commit2.png)
 
+Commit 3 Reflection notes
+    Pada commit ini, saya belajar mengenai bagaimana bahasa Rust menangani error ketika menerima koneksi jaringan yang gagal. Setiap koneksi masuk direpresentasikan sebagai stream, yang kemudian diproses dalam loop for stream in listener.incoming(). Dalam implementasi awal, pemanggilan .unwrap() langsung pada hasil dari listener.incoming() dapat menyebabkan panic apabila terjadi error saat menerima koneksi, misalnya jika koneksi terputus tiba-tiba atau terjadi kesalahan sistem. Untuk mengatasi hal ini, digunakan match stream, di mana jika koneksi berhasil (Ok(stream)), maka akan diproses lebih lanjut dengan memanggil handle_connection(stream). Sebaliknya, jika terjadi error (Err(e)), maka pesan kesalahan akan dicetak menggunakan eprintln!() tanpa menghentikan eksekusi program. Dengan pendekatan ini, server dapat terus berjalan meskipun terdapat koneksi yang gagal, sehingga meningkatkan stabilitas sistem dan memastikan bahwa kesalahan yang terjadi tidak mengganggu koneksi lainnya.
